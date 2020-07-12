@@ -1,6 +1,5 @@
 const { Toolkit } = require("actions-toolkit");
 
-// Run your GitHub Action!
 Toolkit.run(async (tools) => {
   require("action-guard")("pull_request.closed");
 
@@ -11,6 +10,7 @@ Toolkit.run(async (tools) => {
     return;
   }
 
+  tools.log.pending(`Fetching pulls`);
   let pulls = await tools.github.paginate(
     tools.github.pulls.list,
     {
@@ -20,6 +20,7 @@ Toolkit.run(async (tools) => {
     },
     (response) => response.data
   );
+  tools.log.complete(`Fetched pulls`);
 
   const expectedAuthor = payload.pull_request.user.login;
   pulls = pulls.filter((p) => {
@@ -32,4 +33,25 @@ Toolkit.run(async (tools) => {
 
   const pullCount = pulls.length;
   tools.log.debug(`There are ${pullCount} Pull Requests`);
+
+  const message = tools.inputs[`merged_${pullCount}`];
+  if (!message) {
+    tools.log.info("No action required");
+    return;
+  }
+
+  tools.log.pending(`Adding comment`);
+  await tools.github.issues.createComment({
+    ...tools.context.issue,
+    body: message,
+  });
+  tools.log.complete(`Added comment: ${message}`);
+
+  tools.log.pending(`Adding labels`);
+  const labels = [`merge-milestone`, `merge-milestone:${pullCount}`];
+  await tools.github.issues.addLabels({
+    ...tools.context.issue,
+    labels,
+  });
+  tools.log.complete(`Added labels:`, labels);
 });
