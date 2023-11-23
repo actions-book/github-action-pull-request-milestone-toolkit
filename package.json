@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "action-guard": "^0.1.0",
-    "actions-toolkit": "^5.0.0"
+    "actions-toolkit": "^6.0.1"
   },
   "devDependencies": {
     "jest": "^26.0.1",
