@@ -12,6 +12,6 @@
   },
   "devDependencies": {
     "jest": "^26.0.1",
-    "nock": "^13.0.2"
+    "nock": "^13.3.8"
   }
 }
