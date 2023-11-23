@@ -7,7 +7,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "action-guard": "^0.1.0",
+    "action-guard": "^0.2.0",
     "actions-toolkit": "^5.0.0"
   },
   "devDependencies": {
